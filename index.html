@@ -2,44 +2,40 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
 
 <style>
-body {
-    background: #0a0a0a;
-    color: white;
-    font-family: Arial;
-    text-align: center;
-    padding: 20px;
+:root {
+    --bg: #e5e5e5;          /* világos háttér */
+    --card: #111111;        /* Tesla fekete kártya */
+    --accent: #E82127;
+    --text-main: #ffffff;
+    --text-muted: #9b9b9b;
+    --divider: #222222;
 }
 
-h1 {
-    color: #E82127;
+body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+}
+
+/* HEADER */
+.app-title {
+    font-size: 14px;
+    color: #444;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.app-ship {
+    font-size: 26px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 14px;
 }
 
 /* CARD */
 .card {
-    background: #141414;
-    padding: 20px;
-    border-radius: 20px;
-}
-
-/* STATUS */
-.status {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-/* PROGRESS BAR */
-.progress-container {
-    background: #333;
-    height: 14px;
-    border-radius: 20px;
-    margin: 15px 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 14px;
-    background: linear-gradient(90deg, #E82127, #ff5a5f);
-    width: 0%;
-    transition
