@@ -6,26 +6,56 @@
 <title>Tesla Tracker</title>
 </head>
 
-<body style="background:#f2f2f2; font-family:Arial; padding:20px;">
+<body style="background:#f7f7f7; font-family:Arial; padding:20px;">
 
-<h2 style="color:#E82127; text-align:center;">🚢 Morning Cecilie</h2>
+<h2 style="color:#E82127; text-align:center; margin-bottom:5px;">
+    🚢 Morning Cecilie
+</h2>
 
-<div id="status" style="font-size:20px; margin-top:10px; text-align:center;"></div>
+<div id="status" style="text-align:center; font-size:20px; margin-bottom:20px;"></div>
 
-<div style="margin-top:20px; padding:15px; background:white; border-radius:12px;">
+<!-- CARD -->
+<div style="
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    max-width:500px;
+    margin:0 auto;
+">
 
-    <div id="percent" style="margin:8px 0; font-size:18px;"></div>
-    <div id="distance" style="margin:8px 0; font-size:18px;"></div>
-    <div id="speed" style="margin:8px 0; font-size:18px;"></div>
-    <div id="suez" style="margin:8px 0; font-size:18px;"></div>
-    <div id="arrival" style="margin:8px 0; font-size:18px;"></div>
-    <div id="vienna" style="margin:8px 0; font-size:18px;"></div>
-    <div id="handover" style="margin:8px 0; font-size:18px;"></div>
+    <h3 style="margin-top:0; color:#333;">Progress</h3>
+    <div id="percent" style="font-size:18px; margin-bottom:10px;"></div>
+
+    <h3 style="margin-top:20px; color:#333;">Distance & Speed</h3>
+    <div id="distance" style="margin:6px 0; font-size:17px;"></div>
+    <div id="speed" style="margin:6px 0; font-size:17px;"></div>
+
+    <h3 style="margin-top:20px; color:#333;">Route Checkpoints</h3>
+    <div id="suez" style="margin:6px 0; font-size:17px;"></div>
+    <div id="arrival" style="margin:6px 0; font-size:17px;"></div>
+
+    <h3 style="margin-top:20px; color:#333;">Final Delivery</h3>
+    <div id="vienna" style="margin:6px 0; font-size:17px;"></div>
+    <div id="handover" style="margin:6px 0; font-size:17px;"></div>
 
 </div>
 
 <button onclick="openShip()" 
-style="margin-top:20px; width:100%; padding:14px; background:#E82127; color:white; border:none; border-radius:10px; font-size:18px;">
+style="
+    margin-top:25px;
+    width:100%;
+    padding:14px;
+    background:#E82127;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    max-width:500px;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+">
 Live Map
 </button>
 
@@ -44,48 +74,6 @@ function update() {
     progress = Math.max(0, Math.min(100, progress));
 
     document.getElementById("percent").innerText =
-        "Progress: " + progress.toFixed(1) + "%";
+        progress.toFixed(1) + "% completed";
 
-    const remaining = totalDistance * (1 - progress / 100);
-    document.getElementById("distance").innerText =
-        "Remaining distance: " + Math.round(remaining) + " km";
-
-    const totalHours = total / 3600000;
-    const avgKnots = totalDistance / (totalHours * 1.852);
-    document.getElementById("speed").innerText =
-        "Average speed: " + avgKnots.toFixed(1) + " kn";
-
-    let status = "";
-    if (now < new Date("2026-05-15")) status = "Indian Ocean 🌊";
-    else if (now < new Date("2026-05-20")) status = "Arabian Sea";
-    else if (now < suez) status = "Red Sea 🐪";
-    else status = "Europe 🇪🇺";
-
-    document.getElementById("status").innerText =
-        "Current region: " + status;
-
-    document.getElementById("suez").innerText =
-        "Days to Suez: " + Math.ceil((suez - now)/86400000);
-
-    document.getElementById("arrival").innerText =
-        "Days to Belgium arrival: " + Math.ceil((arrival - now)/86400000);
-
-    const viennaArrival = new Date(arrival.getTime() + 4 * 86400000);
-    document.getElementById("vienna").innerText =
-        "Days to Vienna arrival: " + Math.ceil((viennaArrival - now)/86400000);
-
-    const handoverDate = new Date(viennaArrival.getTime() + 3 * 86400000);
-    document.getElementById("handover").innerText =
-        "Estimated handover: " + handoverDate.toDateString();
-}
-
-function openShip() {
-    window.location.href = "https://www.vesselfinder.com/?imo=9477830";
-}
-
-update();
-setInterval(update, 10000);
-</script>
-
-</body>
-</html>
+    const remaining = totalDistance
