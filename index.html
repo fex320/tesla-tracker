@@ -5,7 +5,7 @@
 
 <style>
 body {
-    background: #e5e5e5;   /* világos háttér */
+    background: #e5e5e5;
     color: #111;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
     text-align: center;
@@ -17,16 +17,14 @@ h1 {
     font-weight: 600;
 }
 
-/* CARD */
 .card {
-    background: #141414;   /* fekete Tesla-kártya */
+    background: #141414;
     padding: 25px;
     border-radius: 22px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     color: white;
 }
 
-/* STATUS BADGE */
 .status {
     font-size: 22px;
     margin-bottom: 12px;
@@ -37,7 +35,6 @@ h1 {
     color: white;
 }
 
-/* PROGRESS BAR */
 .progress-container {
     background: #333;
     height: 14px;
@@ -53,7 +50,6 @@ h1 {
     transition: width 1s linear;
 }
 
-/* DATA */
 .data {
     font-size: 18px;
     margin: 8px 0;
@@ -71,7 +67,6 @@ button {
     margin-top: 15px;
 }
 
-/* ALERT */
 .banner {
     background: #E82127;
     padding: 10px;
@@ -111,13 +106,7 @@ button {
 
 <script>
 
-// ===== VIN → SHIP AUTO DETECT =====
+// VIN → SHIP
 const vin = "LRW3E7FS4TC841626";
 
-function getShipByVin(vin) {
-    return {
-        name: "Morning Cecilie",
-        imo: "9477830",
-        start: new Date("2026-04-26"),
-        arrival: new Date("2026-06-02"),
-        suez: new Date("2026-05-22"),
+function get
