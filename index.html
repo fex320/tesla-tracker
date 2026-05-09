@@ -5,8 +5,8 @@
 
 <style>
 body {
-    background: #0a0a0a;
-    color: white;
+    background: #e5e5e5;   /* világos háttér */
+    color: #111;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
     text-align: center;
     padding: 20px;
@@ -19,10 +19,11 @@ h1 {
 
 /* CARD */
 .card {
-    background: #141414;
+    background: #141414;   /* fekete Tesla-kártya */
     padding: 25px;
     border-radius: 22px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    color: white;
 }
 
 /* STATUS BADGE */
@@ -32,7 +33,8 @@ h1 {
     padding: 6px 14px;
     display: inline-block;
     border-radius: 999px;
-    background: #1f1f1f;
+    background: #222;
+    color: white;
 }
 
 /* PROGRESS BAR */
@@ -55,6 +57,7 @@ h1 {
 .data {
     font-size: 18px;
     margin: 8px 0;
+    color: white;
 }
 
 button {
@@ -73,3 +76,48 @@ button {
     background: #E82127;
     padding: 10px;
     border-radius: 10px;
+    margin-bottom: 10px;
+    display: none;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="shipTitle">🚢 Loading...</h1>
+
+<div class="banner" id="banner"></div>
+
+<div class="card">
+
+<div id="status" class="status"></div>
+
+<div class="progress-container">
+    <div id="bar" class="progress-bar"></div>
+</div>
+
+<div id="percent" class="data"></div>
+<div id="distance" class="data"></div>
+<div id="speed" class="data"></div>
+
+<div id="suez" class="data"></div>
+<div id="arrival" class="data"></div>
+<div id="delivery" class="data"></div>
+
+<button onclick="openShip()">Open Live Map 🚢</button>
+
+</div>
+
+<script>
+
+// ===== VIN → SHIP AUTO DETECT =====
+const vin = "LRW3E7FS4TC841626";
+
+function getShipByVin(vin) {
+    return {
+        name: "Morning Cecilie",
+        imo: "9477830",
+        start: new Date("2026-04-26"),
+        arrival: new Date("2026-06-02"),
+        suez: new Date("2026-05-22"),
