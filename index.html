@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  background:#0a0a0a;
+  color:white;
+  text-align:center;
+  font-family:Arial;
+}
+
+h1 { color:#E82127; }
+
+.card {
+  background:#141414;
+  padding:20px;
+  border-radius:20px;
+  margin-top:20px;
+}
+
+.bar-bg {
+  height:12px;
+  background:#333;
+  border-radius:10px;
+}
+
+.bar {
+  height:12px;
+  width:0%;
+  background:#E82127;
+  border-radius:10px;
+}
+
+button {
+  background:#E82127;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  width:100%;
+  margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚢 Morning Cecilie</h1>
+
+<div class="card">
+
+<div id="status"></div>
+
+<div class="bar-bg"><div id="bar" class="bar"></div></div>
+
+<div id="percent"></div>
+<div id="distance"></div>
+
+<div id="suez"></div>
+<div id="arrival"></div>
+
+<button onclick="openShip()">Track Ship 🚢</button>
+
+</div>
+
+<script>
+
+var start = new Date("2026-04-26");
+var arrival = new Date("2026-06-02");
+var suez = new Date("2026-05-22");
+
+var totalDistance = 20000;
+
+function update(){
+  var now = new Date();
+
+  var progress = (now-start)/(arrival-start)*100;
+  if(progress < 0) progress=0;
+  if(progress > 100) progress=100;
+
+  document.getElementById("bar").style.width = progress + "%";
+  document.getElementById("percent").innerText =
+    "Progress: " + progress.toFixed(1) + "%";
+
+  var remaining = totalDistance*(1-progress/100);
+  document.getElementById("distance").innerText =
+    "Remaining: " + Math.round(remaining) + " km";
+
+  var status = "";
+
+  if(now < new Date("2026-05-15")) status="Indian Ocean 🌊";
+  else if(now < new Date("2026-05-20")) status="Arabian Sea";
+  else if(now < suez) status="Red Sea 🐪";
+  else status="Europe 🇪🇺";
+
+  document.getElementById("status").innerText = status;
+
+  document.getElementById("suez").innerText =
+    "Suez: " + Math.ceil((suez-now)/86400000) + " days";
+
+  document.getElementById("arrival").innerText =
+    "Arrival: " + Math.ceil((arrival-now)/86400000) + " days";
+}
+
+function openShip(){
+  window.open(
+    "https://www.marinetraffic.com/en/ais/details/ships/imo:9477830",
+    "_blank"
+  );
+}
+
+update();
+setInterval(update, 5000);
+
+</script>
+
+</body>
+</html>
