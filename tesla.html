@@ -1,52 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
+<title>Tesla shipment tracker (minimal)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
 
-<style>
-:root {
-    --bg: #e5e5e5;          /* világos háttér */
-    --card: #111111;        /* Tesla fekete kártya */
-    --accent: #E82127;
-    --text-main: #ffffff;
-    --text-muted: #9b9b9b;
-    --divider: #222222;
-}
+<h2>🚢 Morning Cecilie – Tesla shipment tracker</h2>
 
-body {
-    background: var(--bg);
-    color: var(--text-main);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
-    padding: 20px;
-    text-align: center;
-}
+<div id="status"></div>
+<hr>
 
-/* HEADER */
-.app-title {
-    font-size: 14px;
-    color: #444;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
+<div id="percent"></div>
+<div id="distance"></div>
+<div id="speed"></div>
+<div id="suez"></div>
+<div id="arrival"></div>
+<div id="vienna"></div>
+<div id="handover"></div>
 
-.app-ship {
-    font-size: 26px;
-    font-weight: 600;
-    color: #111;
-    margin-bottom: 14px;
-}
+<hr>
+<button onclick="openShip()">Open live map</button>
 
-/* CARD */
-.card {
-    background: var(--card);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.4);
-    margin-top: 10px;
-}
+<script>
+// DATES
+const start = new Date("2026-04-26");
+const arrival = new Date("2026-06-02");
+const suez = new Date("2026-05-22");
+const totalDistance = 20000;
 
-/* STATUS PILL */
-.status-pill {
-    display: inline-flex;
-    align
+function update() {
+    const now = new Date();
+
+    const total = arrival - start;
+    const passed = now - start;
+
+    let progress = (passed / total) * 100;
+    if (progress < 0) progress = 0;
+    if (progress > 100) progress = 100;
+
+    document.getElementById("percent").innerText =
+        "Progress: " + progress.toFixed(1) + " %";
+
+    const remaining = totalDistance * (1 - progress / 100);
+    document.getElementById("distance").innerText =
+        "Remaining distance: " + Math.round(remaining) + " km";
+
+    const totalHours = total / 3600000;
+    const avgKnots = totalDistance / (totalHours * 1.852);
+    document.getElementById("speed").innerText =
+        "Average speed (model): " + avgKnots.toFixed(1) + " kn";
+
+    let status = "";
+    if (now < new Date("2026-05-15")) status = "Indian Ocean";
+    else if (now < new Date("2026-05-20")) status = "Arabian Sea";
+    else if (now < suez) status = "Red Sea";
+    else status = "Europe";
+
+    document.getElementById("status").innerText =
+        "Current region: " + status;
+
+    const daysSuez = Math.ceil((suez - now)/86400000);
+    const daysArrival = Math.ceil((arrival - now)/86400000);
+    document.getElementById("suez").innerText =
+        "Days to Suez: " + daysSuez;
+    document.getElementById("arrival").innerText =
+        "Days to Belgium arrival: " + daysArrival;
+
+    const viennaArrival = new Date(arrival.getTime() + 4 * 86400000);
+    const daysVienna = Math.ceil((viennaArrival - now)/86400000);
+    document.getElementById("vien
