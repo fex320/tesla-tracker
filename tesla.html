@@ -2,29 +2,34 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Tesla shipment tracker (minimal)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesla Tracker</title>
 </head>
-<body>
 
-<h2>🚢 Morning Cecilie – Tesla shipment tracker</h2>
+<body style="background:#f2f2f2; font-family:Arial; padding:20px;">
 
-<div id="status"></div>
-<hr>
+<h2 style="color:#E82127; text-align:center;">🚢 Morning Cecilie</h2>
 
-<div id="percent"></div>
-<div id="distance"></div>
-<div id="speed"></div>
-<div id="suez"></div>
-<div id="arrival"></div>
-<div id="vienna"></div>
-<div id="handover"></div>
+<div id="status" style="font-size:20px; margin-top:10px; text-align:center;"></div>
 
-<hr>
-<button onclick="openShip()">Open live map</button>
+<div style="margin-top:20px; padding:15px; background:white; border-radius:12px;">
+
+    <div id="percent" style="margin:8px 0; font-size:18px;"></div>
+    <div id="distance" style="margin:8px 0; font-size:18px;"></div>
+    <div id="speed" style="margin:8px 0; font-size:18px;"></div>
+    <div id="suez" style="margin:8px 0; font-size:18px;"></div>
+    <div id="arrival" style="margin:8px 0; font-size:18px;"></div>
+    <div id="vienna" style="margin:8px 0; font-size:18px;"></div>
+    <div id="handover" style="margin:8px 0; font-size:18px;"></div>
+
+</div>
+
+<button onclick="openShip()" 
+style="margin-top:20px; width:100%; padding:14px; background:#E82127; color:white; border:none; border-radius:10px; font-size:18px;">
+Live Map
+</button>
 
 <script>
-// DATES
 const start = new Date("2026-04-26");
 const arrival = new Date("2026-06-02");
 const suez = new Date("2026-05-22");
@@ -32,16 +37,14 @@ const totalDistance = 20000;
 
 function update() {
     const now = new Date();
-
     const total = arrival - start;
     const passed = now - start;
 
     let progress = (passed / total) * 100;
-    if (progress < 0) progress = 0;
-    if (progress > 100) progress = 100;
+    progress = Math.max(0, Math.min(100, progress));
 
     document.getElementById("percent").innerText =
-        "Progress: " + progress.toFixed(1) + " %";
+        "Progress: " + progress.toFixed(1) + "%";
 
     const remaining = totalDistance * (1 - progress / 100);
     document.getElementById("distance").innerText =
@@ -50,24 +53,39 @@ function update() {
     const totalHours = total / 3600000;
     const avgKnots = totalDistance / (totalHours * 1.852);
     document.getElementById("speed").innerText =
-        "Average speed (model): " + avgKnots.toFixed(1) + " kn";
+        "Average speed: " + avgKnots.toFixed(1) + " kn";
 
     let status = "";
-    if (now < new Date("2026-05-15")) status = "Indian Ocean";
+    if (now < new Date("2026-05-15")) status = "Indian Ocean 🌊";
     else if (now < new Date("2026-05-20")) status = "Arabian Sea";
-    else if (now < suez) status = "Red Sea";
-    else status = "Europe";
+    else if (now < suez) status = "Red Sea 🐪";
+    else status = "Europe 🇪🇺";
 
     document.getElementById("status").innerText =
         "Current region: " + status;
 
-    const daysSuez = Math.ceil((suez - now)/86400000);
-    const daysArrival = Math.ceil((arrival - now)/86400000);
     document.getElementById("suez").innerText =
-        "Days to Suez: " + daysSuez;
+        "Days to Suez: " + Math.ceil((suez - now)/86400000);
+
     document.getElementById("arrival").innerText =
-        "Days to Belgium arrival: " + daysArrival;
+        "Days to Belgium arrival: " + Math.ceil((arrival - now)/86400000);
 
     const viennaArrival = new Date(arrival.getTime() + 4 * 86400000);
-    const daysVienna = Math.ceil((viennaArrival - now)/86400000);
-    document.getElementById("vien
+    document.getElementById("vienna").innerText =
+        "Days to Vienna arrival: " + Math.ceil((viennaArrival - now)/86400000);
+
+    const handoverDate = new Date(viennaArrival.getTime() + 3 * 86400000);
+    document.getElementById("handover").innerText =
+        "Estimated handover: " + handoverDate.toDateString();
+}
+
+function openShip() {
+    window.location.href = "https://www.vesselfinder.com/?imo=9477830";
+}
+
+update();
+setInterval(update, 10000);
+</script>
+
+</body>
+</html>
