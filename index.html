@@ -7,80 +7,144 @@
 body {
   background:#0b0b0b;
   color:white;
-  font-family:-apple-system, BlinkMacSystemFont, Arial;
-  margin:0;
+  font-family:Arial;
   text-align:center;
-}
-
-/* HEADER */
-.header {
+  margin:0;
   padding:20px;
-  font-size:22px;
-  color:#E82127;
 }
 
-/* CARD */
+h1 { color:#E82127; }
+
 .card {
-  padding:25px;
+  background:#141414;
+  padding:20px;
+  border-radius:20px;
 }
 
-/* STATUS */
-.status {
-  font-size:20px;
-  margin-bottom:15px;
-  color:#aaa;
-}
-
-/* BIG PROGRESS */
-.progress-container {
-  margin:25px 0;
-}
-
-.percent {
-  font-size:40px;
-  font-weight:600;
-}
-
-.sub {
-  color:#888;
-  font-size:15px;
-}
-
-/* BAR */
+/* progress */
 .bar-bg {
-  background:#222;
-  height:8px;
+  height:10px;
+  background:#333;
   border-radius:10px;
   margin:20px 0;
 }
 
 .bar {
-  height:8px;
+  height:10px;
   width:0%;
   background:#E82127;
   border-radius:10px;
-  transition: width 1s ease;
 }
 
-/* DATA */
-.data {
+.big {
+  font-size:36px;
   margin:10px 0;
-  font-size:16px;
-  color:#ccc;
 }
 
-/* BUTTON */
+.small {
+  color:#aaa;
+  margin:5px 0;
+}
+
 button {
   background:#E82127;
   border:none;
   padding:14px;
-  width:90%;
   border-radius:12px;
   color:white;
-  font-size:16px;
+  width:100%;
   margin-top:20px;
 }
+</style>
+</head>
 
-/* MILESTONES */
-.milestones {
-  display:flex;
+<body>
+
+<h1>🚢 Morning Cecilie</h1>
+
+<div class="card">
+
+<div id="status" class="small">Loading...</div>
+
+<div id="percent" class="big">0%</div>
+
+<div class="bar-bg">
+  <div id="bar" class="bar"></div>
+</div>
+
+<div id="distance" class="small"></div>
+<div id="suez" class="small"></div>
+<div id="arrival" class="small"></div>
+
+<button onclick="openShip()">Track Ship 🚢</button>
+
+</div>
+
+<script>
+
+// DATES
+const start = new Date("2026-04-26");
+const arrival = new Date("2026-06-02");
+const suez = new Date("2026-05-22");
+
+const totalDistance = 20000;
+
+// MAIN UPDATE
+function update() {
+  const now = new Date();
+
+  let progress = (now - start) / (arrival - start) * 100;
+
+  if (progress < 0) progress = 0;
+  if (progress > 100) progress = 100;
+
+  // update UI
+  document.getElementById("percent").innerText =
+    progress.toFixed(1) + "%";
+
+  document.getElementById("bar").style.width =
+    progress + "%";
+
+  const remaining = totalDistance * (1 - progress / 100);
+
+  document.getElementById("distance").innerText =
+    Math.round(remaining) + " km remaining";
+
+  // status
+  let status = "Indian Ocean 🌊";
+
+  if (now >= new Date("2026-05-15")) status = "Arabian Sea";
+  if (now >= new Date("2026-05-20")) status = "Red Sea 🐪";
+  if (now >= suez) status = "Mediterranean 🇪🇺";
+  if (now >= arrival) status = "Arrived in Europe ✅";
+
+  document.getElementById("status").innerText = status;
+
+  // countdown
+  function days(d) {
+    return Math.ceil((d - now) / 86400000);
+  }
+
+  document.getElementById("suez").innerText =
+    "Suez: " + days(suez) + " days";
+
+  document.getElementById("arrival").innerText =
+    "Arrival: " + days(arrival) + " days";
+}
+
+// BUTTON
+function openShip() {
+  window.open(
+    "https://www.marinetraffic.com/en/ais/details/ships/imo:9477830",
+    "_blank"
+  );
+}
+
+// START
+update();
+setInterval(update, 5000);
+
+</script>
+
+</body>
+</html>
