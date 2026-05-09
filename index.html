@@ -5,146 +5,71 @@
 
 <style>
 body {
-  background:#0b0b0b;
-  color:white;
-  font-family:Arial;
-  text-align:center;
-  margin:0;
-  padding:20px;
+    background: #0a0a0a;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
 }
 
-h1 { color:#E82127; }
+h1 {
+    color: #E82127;
+    font-weight: 600;
+}
 
+/* CARD */
 .card {
-  background:#141414;
-  padding:20px;
-  border-radius:20px;
+    background: #141414;
+    padding: 25px;
+    border-radius: 22px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
-/* progress */
-.bar-bg {
-  height:10px;
-  background:#333;
-  border-radius:10px;
-  margin:20px 0;
+/* STATUS BADGE */
+.status {
+    font-size: 22px;
+    margin-bottom: 12px;
+    padding: 6px 14px;
+    display: inline-block;
+    border-radius: 999px;
+    background: #1f1f1f;
 }
 
-.bar {
-  height:10px;
-  width:0%;
-  background:#E82127;
-  border-radius:10px;
+/* PROGRESS BAR */
+.progress-container {
+    background: #333;
+    height: 14px;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
 }
 
-.big {
-  font-size:36px;
-  margin:10px 0;
+.progress-bar {
+    height: 14px;
+    background: linear-gradient(90deg, #E82127, #ff5a5f);
+    width: 0%;
+    transition: width 1s linear;
 }
 
-.small {
-  color:#aaa;
-  margin:5px 0;
+/* DATA */
+.data {
+    font-size: 18px;
+    margin: 8px 0;
 }
 
 button {
-  background:#E82127;
-  border:none;
-  padding:14px;
-  border-radius:12px;
-  color:white;
-  width:100%;
-  margin-top:20px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🚢 Morning Cecilie</h1>
-
-<div class="card">
-
-<div id="status" class="small">Loading...</div>
-
-<div id="percent" class="big">0%</div>
-
-<div class="bar-bg">
-  <div id="bar" class="bar"></div>
-</div>
-
-<div id="distance" class="small"></div>
-<div id="suez" class="small"></div>
-<div id="arrival" class="small"></div>
-
-<button onclick="openShip()">Track Ship 🚢</button>
-
-</div>
-
-<script>
-
-// DATES
-const start = new Date("2026-04-26");
-const arrival = new Date("2026-06-02");
-const suez = new Date("2026-05-22");
-
-const totalDistance = 20000;
-
-// MAIN UPDATE
-function update() {
-  const now = new Date();
-
-  let progress = (now - start) / (arrival - start) * 100;
-
-  if (progress < 0) progress = 0;
-  if (progress > 100) progress = 100;
-
-  // update UI
-  document.getElementById("percent").innerText =
-    progress.toFixed(1) + "%";
-
-  document.getElementById("bar").style.width =
-    progress + "%";
-
-  const remaining = totalDistance * (1 - progress / 100);
-
-  document.getElementById("distance").innerText =
-    Math.round(remaining) + " km remaining";
-
-  // status
-  let status = "Indian Ocean 🌊";
-
-  if (now >= new Date("2026-05-15")) status = "Arabian Sea";
-  if (now >= new Date("2026-05-20")) status = "Red Sea 🐪";
-  if (now >= suez) status = "Mediterranean 🇪🇺";
-  if (now >= arrival) status = "Arrived in Europe ✅";
-
-  document.getElementById("status").innerText = status;
-
-  // countdown
-  function days(d) {
-    return Math.ceil((d - now) / 86400000);
-  }
-
-  document.getElementById("suez").innerText =
-    "Suez: " + days(suez) + " days";
-
-  document.getElementById("arrival").innerText =
-    "Arrival: " + days(arrival) + " days";
+    background: #E82127;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 15px;
 }
 
-// BUTTON
-function openShip() {
-  window.open(
-    "https://www.marinetraffic.com/en/ais/details/ships/imo:9477830",
-    "_blank"
-  );
-}
-
-// START
-update();
-setInterval(update, 5000);
-
-</script>
-
-</body>
-</html>
+/* ALERT */
+.banner {
+    background: #E82127;
+    padding: 10px;
+    border-radius: 10px;
