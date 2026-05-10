@@ -126,7 +126,7 @@ function update() {
     document.getElementById("percent").innerText =
         "Progress: " + progress.toFixed(1) + "%";
 
-    const remaining = totalDistance * (1 - progress / 100);
+    const remaining = totalDistance * (1 - progress / 100) * 0.7;
 
     document.getElementById("distance").innerText =
         "Remaining: " + Math.round(remaining) + " km";
