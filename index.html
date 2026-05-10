@@ -1,89 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    background: #0a0a0a;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #E82127;
+}
+
+/* CARD */
+.card {
+    background: #141414;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+/* STATUS */
+.status {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* PROGRESS BAR */
+.progress-container {
+    background: #333;
+    height: 14px;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 14px;
+    background: linear-gradient(90deg, #E82127, #ff5a5f);
+    width: 0%;
+    transition: width 1s linear;
+}
+
+/* DATA */
+.data {
+    font-size: 18px;
+    margin: 6px 0;
+}
+
+button {
+    background: #E82127;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+/* ALERT */
+.banner {
+    background: #E82127;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚢 Morning Cecilie</h1>
+
+<div class="banner" id="banner"></div>
+
+<div class="card">
+
+<div id="status" class="status"></div>
+
+<div class="progress-container">
+    <div id="bar" class="progress-bar"></div>
+</div>
+
+<div id="percent" class="data"></div>
+<div id="distance" class="data"></div>
+<div id="speed" class="data"></div>
+
+<div id="suez" class="data"></div>
+<div id="arrival" class="data"></div>
+
+<button onclick="openShip()">Open Live Map 🚢</button>
+
+</div>
+
 <script>
 
 // ===== DATES =====
 const start = new Date("2026-04-26");
+const arrival = new Date("2026-06-07"); // ✅ updated ETA
+const suez = null; // ✅ no longer used
 
-// ✅ Africa route
-const totalDistance = 25000;
+// total distance approx
+const totalDistance = 20000;
 
-// ✅ fixed ETA (Africa route)
-const arrivalDate = new Date("2026-06-07");
-
-// ===== UPDATE =====
+// ===== LIVE UPDATE =====
 function update() {
 
     const now = new Date();
 
-    const total = arrivalDate - start;
+    const total = arrival - start;
     const passed = now - start;
 
-    let progress = passed / total * 100;
-
-    // ✅ prevent crash
-    if (isNaN(progress)) progress = 0;
-
-    progress = Math.max(0, Math.min(progress, 100));
-
-    const remaining = totalDistance * (1 - progress / 100) * 0.85;
+    let progress = (passed / total) * 100;
+    if (progress < 0) progress = 0;
+    if (progress > 100) progress = 100;
 
     // ===== UI =====
     document.getElementById("bar").style.width = progress + "%";
 
-    document.getElementById("percent").innerText =
-        "Progress: " + progress.toFixed(1) + "%";
-
-    document.getElementById("distance").innerText =
-        "Remaining: " + Math.round(remaining) + " km";
-
-    document.getElementById("speed").innerText =
-        "Speed: ~17 knots ⚡";
-
-    // ===== STATUS =====
-    let status = "";
-
-    if (progress < 25) {
-        status = "Indian Ocean (Madagascar) 🌊";
-    } else if (progress < 45) {
-        status = "Towards South Africa 🌍";
-    } else if (progress < 60) {
-        status = "Cape of Good Hope ⚓";
-    } else if (progress < 80) {
-        status = "Atlantic Ocean 🌊";
-    } else {
-        status = "Europe 🇪🇺";
-    }
-
-    document.getElementById("status").innerText = status;
-
-    // ✅ simple stable ETA
-    const daysArrival = Math.ceil((arrivalDate - now) / 86400000);
-
-    // ✅ no Suez anymore
-    document.getElementById("suez").innerText =
-        "Route: via Africa 🌍";
-
-    document.getElementById("arrival").innerText =
-        "Arrival: " + Math.max(daysArrival, 0) + " days";
-
-}
-
-// ===== SAFE BANNER =====
-function showBanner(text) {
-    const b = document.getElementById("banner");
-    if (!b) return;
-
-    b.innerText = text;
-    b.style.display = "block";
-}
-
-// ===== LINK =====
-function openShip() {
-    window.location.href =
-        "https://www.vesselfinder.com/?imo=9477830";
-}
-
-// ===== LOOP =====
-update();
-setInterval(update, 10000);
-
-</script>
