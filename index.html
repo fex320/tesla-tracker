@@ -1,119 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    background: #0a0a0a;
-    color: white;
-    font-family: Arial;
-    text-align: center;
-    padding: 20px;
-}
-
-h1 {
-    color: #E82127;
-}
-
-/* CARD */
-.card {
-    background: #141414;
-    padding: 20px;
-    border-radius: 20px;
-}
-
-/* STATUS */
-.status {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-/* PROGRESS BAR */
-.progress-container {
-    background: #333;
-    height: 14px;
-    border-radius: 20px;
-    margin: 15px 0;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 14px;
-    background: linear-gradient(90deg, #E82127, #ff5a5f);
-    width: 0%;
-    transition: width 1s linear;
-}
-
-/* DATA */
-.data {
-    font-size: 18px;
-    margin: 6px 0;
-}
-
-button {
-    background: #E82127;
-    border: none;
-    padding: 14px;
-    border-radius: 10px;
-    color: white;
-    width: 100%;
-    font-size: 18px;
-    margin-top: 15px;
-}
-
-/* ALERT */
-.banner {
-    background: #E82127;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    display: none;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🚢 Morning Cecilie</h1>
-
-<div class="banner" id="banner"></div>
-
-<div class="card">
-
-<div id="status" class="status"></div>
-
-<div class="progress-container">
-    <div id="bar" class="progress-bar"></div>
-</div>
-
-<div id="percent" class="data"></div>
-<div id="distance" class="data"></div>
-<div id="speed" class="data"></div>
-
-<div id="suez" class="data"></div>
-<div id="arrival" class="data"></div>
-
-<button onclick="openShip()">Open Live Map 🚢</button>
-
-</div>
-
 <script>
 
 // ===== DATES =====
 const start = new Date("2026-04-26");
-const arrival = new Date("2026-06-02");
-const suez = new Date("2026-05-22");
 
-// total distance approx
-const totalDistance = 20000;
+// ✅ Africa route is longer
+const totalDistance = 25000;
 
 // ===== LIVE UPDATE =====
 function update() {
 
     const now = new Date();
 
-    const total = arrival - start;
+    const total = new Date("2026-06-07") - start; // new realistic ETA
     const passed = now - start;
 
     let progress = (passed / total) * 100;
@@ -126,7 +24,8 @@ function update() {
     document.getElementById("percent").innerText =
         "Progress: " + progress.toFixed(1) + "%";
 
-    const remaining = totalDistance * (1 - progress / 100) * 0.7;
+    // ✅ adjusted distance model for Africa route
+    const remaining = totalDistance * (1 - progress / 100) * 0.85;
 
     document.getElementById("distance").innerText =
         "Remaining: " + Math.round(remaining) + " km";
@@ -134,39 +33,36 @@ function update() {
     document.getElementById("speed").innerText =
         "Speed: ~17 knots ⚡";
 
-    // ===== STATUS =====
+    // ===== STATUS (Africa route) =====
     let status = "";
 
-    if (now < new Date("2026-05-15")) {
-        status = "Indian Ocean 🌊";
-    } else if (now < new Date("2026-05-20")) {
-        status = "Arabian Sea";
-    } else if (now < suez) {
-        status = "Red Sea 🐪";
+    if (progress < 25) {
+        status = "Indian Ocean (near Madagascar) 🌊";
+    } else if (progress < 45) {
+        status = "Towards South Africa 🌍";
+    } else if (progress < 60) {
+        status = "Cape of Good Hope ⚓";
+    } else if (progress < 80) {
+        status = "Atlantic Ocean 🌊";
     } else {
         status = "Europe 🇪🇺";
     }
 
     document.getElementById("status").innerText = status;
 
-    // ===== COUNTDOWN =====
-    const daysSuez = Math.ceil((remaining * 0.45) / 700);
-    const daysArrival = Math.ceil(remaining / 700) + 5;
+    // ✅ NEW ETA (no Suez anymore!)
+    const daysArrival = Math.ceil(remaining / 700) + 2;
 
+    // show route instead of Suez
     document.getElementById("suez").innerText =
-        "Suez: " + daysSuez + " days";
+        "Route: via Africa 🌍";
 
     document.getElementById("arrival").innerText =
         "Arrival: " + daysArrival + " days";
 
     // ===== ALERT =====
-    if (daysSuez <= 1 && !localStorage.getItem("alert1")) {
-        showBanner("🚢 Suez coming up!");
-        localStorage.setItem("alert1", "1");
-    }
-
-    if (progress > 95 && !localStorage.getItem("alert2")) {
-        showBanner("🇪🇺 Almost arrived!");
+    if (progress > 90 && !localStorage.getItem("alert2")) {
+        showBanner("🇪🇺 Entering Europe soon!");
         localStorage.setItem("alert2", "1");
     }
 }
@@ -190,9 +86,6 @@ function openShip() {
 
 // ===== LOOP =====
 update();
-setInterval(update, 10000); // faster updates
+setInterval(update, 10000);
 
 </script>
-
-</body>
-</html>
