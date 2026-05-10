@@ -1,7 +1,7 @@
-// ===== DATES =====
+// ===== START DATE =====
 const start = new Date("2026-04-26");
 
-// ===== ROUTE =====
+// ===== ROUTE (km) =====
 const route = [
   { name: "Shanghai 🇨🇳", distance: 0 },
   { name: "Singapore 🌴", distance: 4300 },
@@ -10,7 +10,7 @@ const route = [
   { name: "Europe 🇪🇺", distance: 20000 }
 ];
 
-// use LET (important!)
+// speed (km/day)
 let speedPerDay = 750;
 
 // ===== UPDATE =====
@@ -78,3 +78,7 @@ function update() {
         localStorage.setItem("alert2", "1");
     }
 }
+
+// ===== START LOOP =====
+update();
+setInterval(update, 10000);
