@@ -150,8 +150,8 @@ function update() {
     document.getElementById("status").innerText = status;
 
     // ===== COUNTDOWN =====
-    const daysSuez = Math.ceil((suez - now)/86400000);
-    const daysArrival = Math.ceil((arrival - now)/86400000);
+    const daysSuez = Math.ceil((remaining * 0.45) / 700);
+    const daysArrival = Math.ceil(remaining / 700) + 5;
 
     document.getElementById("suez").innerText =
         "Suez: " + daysSuez + " days";
