@@ -1,4 +1,7 @@
-// ===== ROUTE SEGMENTS (realistic distances in km) =====
+// ===== DATES =====
+const start = new Date("2026-04-26");
+
+// ===== ROUTE =====
 const route = [
   { name: "Shanghai 🇨🇳", distance: 0 },
   { name: "Singapore 🌴", distance: 4300 },
@@ -7,43 +10,39 @@ const route = [
   { name: "Europe 🇪🇺", distance: 20000 }
 ];
 
-// average speed in km/day (~17 knots)
-const speedPerDay = 750;
+// use LET (important!)
+let speedPerDay = 750;
 
 // ===== UPDATE =====
 function update() {
 
     const now = new Date();
 
-    // days passed
     const daysPassed = (now - start) / 86400000;
 
-    // distance traveled
-    const traveled = daysPassed * speedPerDay;
-
-    // cap values
     const totalDist = route[route.length - 1].distance;
-    const currentDist = Math.min(traveled, totalDist);
 
-    // progress %
-    const progress = (currentDist / totalDist) * 100;
+    let traveled = daysPassed * speedPerDay;
 
-    // ===== FIND CURRENT SEGMENT =====
+    if (traveled < 0) traveled = 0;
+    if (traveled > totalDist) traveled = totalDist;
+
+    const progress = (traveled / totalDist) * 100;
+
+    // ===== STATUS =====
     let status = route[route.length - 1].name;
 
     for (let i = 0; i < route.length - 1; i++) {
-        if (currentDist >= route[i].distance && currentDist < route[i + 1].distance) {
+        if (traveled >= route[i].distance && traveled < route[i + 1].distance) {
             status = route[i + 1].name;
             break;
         }
     }
 
-    // ===== DISTANCE LEFT =====
-    const remaining = totalDist - currentDist;
+    const remaining = totalDist - traveled;
 
-    // ===== ETA CALCULATION =====
-    function daysTo(targetDistance) {
-        return Math.max(0, Math.ceil((targetDistance - currentDist) / speedPerDay));
+    function daysTo(target) {
+        return Math.max(0, Math.ceil((target - traveled) / speedPerDay));
     }
 
     const suezDist = route[3].distance;
