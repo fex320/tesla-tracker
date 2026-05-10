@@ -1,84 +1,87 @@
-// ===== START DATE =====
-const start = new Date("2026-04-26");
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// ===== ROUTE (km) =====
-const route = [
-  { name: "Shanghai 🇨🇳", distance: 0 },
-  { name: "Singapore 🌴", distance: 4300 },
-  { name: "Indian Ocean 🌊", distance: 11000 },
-  { name: "Suez Canal 🐪", distance: 14500 },
-  { name: "Europe 🇪🇺", distance: 20000 }
-];
-
-// speed (km/day)
-let speedPerDay = 750;
-
-// ===== UPDATE =====
-function update() {
-
-    const now = new Date();
-
-    const daysPassed = (now - start) / 86400000;
-
-    const totalDist = route[route.length - 1].distance;
-
-    let traveled = daysPassed * speedPerDay;
-
-    if (traveled < 0) traveled = 0;
-    if (traveled > totalDist) traveled = totalDist;
-
-    const progress = (traveled / totalDist) * 100;
-
-    // ===== STATUS =====
-    let status = route[route.length - 1].name;
-
-    for (let i = 0; i < route.length - 1; i++) {
-        if (traveled >= route[i].distance && traveled < route[i + 1].distance) {
-            status = route[i + 1].name;
-            break;
-        }
-    }
-
-    const remaining = totalDist - traveled;
-
-    function daysTo(target) {
-        return Math.max(0, Math.ceil((target - traveled) / speedPerDay));
-    }
-
-    const suezDist = route[3].distance;
-
-    // ===== UI =====
-    document.getElementById("bar").style.width = progress + "%";
-
-    document.getElementById("percent").innerText =
-        "Progress: " + progress.toFixed(1) + "%";
-
-    document.getElementById("distance").innerText =
-        "Remaining: " + Math.round(remaining) + " km";
-
-    document.getElementById("speed").innerText =
-        "Speed: ~17 knots ⚡";
-
-    document.getElementById("status").innerText = status;
-
-    document.getElementById("suez").innerText =
-        "Suez: " + daysTo(suezDist) + " days";
-
-    document.getElementById("arrival").innerText =
-        "Arrival: " + daysTo(totalDist) + " days";
-
-    // ===== ALERTS =====
-    if (daysTo(suezDist) <= 1 && !localStorage.getItem("alert1")) {
-        showBanner("🚢 Suez coming up!");
-        localStorage.setItem("alert1", "1");
-    }
-
-    if (progress > 95 && !localStorage.getItem("alert2")) {
-        showBanner("🇪🇺 Almost arrived!");
-        localStorage.setItem("alert2", "1");
-    }
+<style>
+body {
+    background: #0a0a0a;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 20px;
 }
 
-// ===== START LOOP =====
-update();
-setInterval(update, 10000);
+h1 {
+    color: #E82127;
+}
+
+.card {
+    background: #141414;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.status {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.progress-container {
+    background: #333;
+    height: 14px;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 14px;
+    background: linear-gradient(90deg, #E82127, #ff5a5f);
+    width: 0%;
+    transition: width 1s linear;
+}
+
+.data {
+    font-size: 18px;
+    margin: 6px 0;
+}
+
+button {
+    background: #E82127;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.banner {
+    background: #E82127;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚢 Morning Cecilie</h1>
+
+<div id="banner" class="banner"></div>
+
+<div class="card">
+    <div id="status" class="status"></div>
+
+    <div class="progress-container">
+        <div id="bar" class="progress-bar"></div>
+    </div>
+
+    <div id="percent" class="data"></div>
+    <div id="distance" class="data"></div>
+    <div id="speed" class="data"></div>
+
