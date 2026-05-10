@@ -1,100 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesla Tracker</title>
+</head>
+
+<body style="background:#0a0a0a;color:white;font-family:Arial;text-align:center;padding:20px;">
+
+<h1 style="color:#E82127;">🚢 Morning Cecilie</h1>
+
+<div id="status"></div>
+<div id="progress"></div>
+<div id="suez"></div>
+
 <script>
 
-// ===== DATES =====
 const start = new Date("2026-04-26");
-const arrival = new Date("2026-06-02");
 const suez = new Date("2026-05-22");
 
-const totalDistance = 20000;
-
-// small correction factor (THIS is the key improvement)
-const distanceCorrection = 0.65;
-
-// ===== LIVE UPDATE =====
 function update() {
 
     const now = new Date();
 
-    const total = arrival - start;
-    const passed = now - start;
+    const daysPassed = (now - start) / 86400000;
 
-    let progress = (passed / total) * 100;
-    if (progress < 0) progress = 0;
-    if (progress > 100) progress = 100;
+    let progress = Math.min(Math.max(daysPassed * 5, 0), 100);
 
-    // ✅ corrected remaining distance (fix)
-    const remaining = totalDistance * (1 - progress / 100) * distanceCorrection;
+    document.getElementById("status").innerText =
+        "Ship is traveling...";
 
-    document.getElementById("bar").style.width = progress + "%";
-
-    document.getElementById("percent").innerText =
+    document.getElementById("progress").innerText =
         "Progress: " + progress.toFixed(1) + "%";
 
-    document.getElementById("distance").innerText =
-        "Remaining: " + Math.round(remaining) + " km";
-
-    document.getElementById("speed").innerText =
-        "Speed: ~17 knots ⚡";
-
-    // ===== STATUS =====
-    let status = "";
-
-    if (progress < 45) {
-        status = "Indian Ocean 🌊";
-    } else if (progress < 65) {
-        status = "Arabian Sea";
-    } else if (progress < 80) {
-        status = "Red Sea 🐪";
-    } else {
-        status = "Europe 🇪🇺";
-    }
-
-    document.getElementById("status").innerText = status;
-
-    // ✅ smarter countdown using correction
-    let daysSuez = Math.ceil((suez - now)/86400000 * 0.6);
-    let daysArrival = Math.ceil((arrival - now)/86400000 * 0.85);
-
-    if (daysSuez < 0) daysSuez = 0;
-    if (daysArrival < 0) daysArrival = 0;
+    const daysSuez = Math.ceil((suez - now)/86400000);
 
     document.getElementById("suez").innerText =
-        "Suez: " + daysSuez + " days";
-
-    document.getElementById("arrival").innerText =
-        "Arrival: " + daysArrival + " days";
-
-    // ===== ALERT =====
-    if (daysSuez <= 1 && !localStorage.getItem("alert1")) {
-        showBanner("🚢 Suez coming up!");
-        localStorage.setItem("alert1", "1");
-    }
-
-    if (progress > 95 && !localStorage.getItem("alert2")) {
-        showBanner("🇪🇺 Almost arrived!");
-        localStorage.setItem("alert2", "1");
-    }
+        "Suez in: " + daysSuez + " days";
 }
 
-// ===== BANNER =====
-function showBanner(text) {
-    const b = document.getElementById("banner");
-    b.innerText = text;
-    b.style.display = "block";
-
-    if (navigator.vibrate) {
-        navigator.vibrate([200,100,200]);
-    }
-}
-
-// ===== LINK =====
-function openShip() {
-    window.location.href =
-    "https://www.vesselfinder.com/?imo=9477830";
-}
-
-// ===== LOOP =====
 update();
-setInterval(update, 10000);
+setInterval(update, 5000);
 
 </script>
+
+</body>
+</html>
