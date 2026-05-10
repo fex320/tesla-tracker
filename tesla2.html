@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesla Tracker</title>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+body {
+    background: #0a0a0a;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #E82127;
+}
+
+.card {
+    background: #141414;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.progress-container {
+    background: #333;
+    height: 14px;
+    border-radius: 20px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 14px;
+    background: linear-gradient(90deg, #E82127, #ff5a5f);
+    width: 0%;
+    transition: width 1s linear;
+}
+
+.data {
+    margin: 8px 0;
+    font-size: 18px;
+}
+
+button {
+    margin-top: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #E82127;
+    color: white;
+    width: 100%;
+    font-size: 16px;
+}
+
+#map {
+    height: 320px;
+    margin-top: 20px;
+    border-radius: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚢 Morning Cecilie</h1>
+
+<div class="card">
+
+<div id="status" class="data"></div>
+
+<div class="progress-container">
+    <div id="bar" class="progress-bar"></div>
+</div>
+
+<div id="progress" class="data"></div>
+<div id="distance" class="data"></div>
+<div id="speed" class="data"></div>
+<div id="suez" class="data"></div>
+<div id="arrival" class="data"></div>
+
+<button onclick="openShip()">Open Live Map</button>
+
+</div>
+
+<div id="map"></div>
+
+<script>
+
+// ===== CONFIG =====
+const start = new Date("2026-04-26");
+const totalDistance = 20000;
+
+// ===== MAP =====
+const map = L.map('map').setView([20, 60], 3);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// route coordinates
+const routeCoords = [
