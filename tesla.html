@@ -88,9 +88,13 @@ const start = new Date("2026-04-26");
 const TOTAL_DISTANCE = 18000;
 const SUEZ_DISTANCE = 14000;
 
-// realistic speed
+// ✅ real-world delays
+const SUEZ_DELAY = 2;   // waiting + canal
+const PORT_DELAY = 3;   // unloading + logistics
+
+// realistic speed (km/day)
 function getSpeed() {
-    return 630 + Math.random() * 70; // ~630–700 km/day
+    return 630 + Math.random() * 70;
 }
 
 // ===== UPDATE =====
@@ -104,7 +108,7 @@ function update() {
 
     let traveled = daysPassed * speed;
 
-    // clamp
+    // clamp values
     if (traveled < 0) traveled = 0;
     if (traveled > TOTAL_DISTANCE) traveled = TOTAL_DISTANCE;
 
@@ -116,7 +120,7 @@ function update() {
     let status = "";
 
     if (traveled < 4300) {
-        status = "Asia / Leaving China 🇨🇳";
+        status = "China / Departure 🇨🇳";
     } else if (traveled < 10500) {
         status = "Indian Ocean 🌊";
     } else if (traveled < SUEZ_DISTANCE) {
@@ -131,6 +135,10 @@ function update() {
     function daysTo(target) {
         return Math.max(0, Math.ceil((target - traveled) / speed));
     }
+
+    // ✅ FIXED arrival with delays
+    const suezDays = daysTo(SUEZ_DISTANCE) + SUEZ_DELAY;
+    const arrivalDays = daysTo(TOTAL_DISTANCE) + SUEZ_DELAY + PORT_DELAY;
 
     // ===== UI =====
     document.getElementById("bar").style.width = progress + "%";
@@ -147,10 +155,11 @@ function update() {
     document.getElementById("status").innerText = status;
 
     document.getElementById("suez").innerText =
-        "Suez: " + daysTo(SUEZ_DISTANCE) + " days";
+        "Suez: " + suezDays + " days";
 
     document.getElementById("arrival").innerText =
-        "Arrival: " + daysTo(TOTAL_DISTANCE) + " days";
+        "Arrival: " + arrivalDays + " days";
+
 }
 
 // ===== BUTTON =====
